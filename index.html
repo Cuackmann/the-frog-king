@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The Frog King — Synth Ensemble</title>
+
+  <style>
+    :root {
+      --black: #030303;
+      --white: #e9e9e4;
+      --grey: #777773;
+      --dark-grey: #1b1b19;
+      --green: #9cff57;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* subtle background grid */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,0.018) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,0.018) 1px,
+          transparent 1px
+        );
+
+      background-size: 60px 60px;
+
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    /* subtle green glow */
+    body::after {
+      content: "";
+      position: fixed;
+
+      width: 600px;
+      height: 600px;
+
+      left: 50%;
+      top: 15%;
+
+      transform: translateX(-50%);
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(100, 255, 60, 0.05),
+          transparent 65%
+        );
+
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .site {
+      width: min(1100px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    /* HEADER */
+
+    header {
+      height: 80px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom: 1px solid var(--dark-grey);
+    }
+
+    .small-logo {
+      font-size: 11px;
+
+      letter-spacing: 0.25em;
+
+      text-transform: uppercase;
+
+      color: var(--grey);
+    }
+
+    nav {
+      display: flex;
+      gap: 26px;
+    }
+
+    nav a {
+      color: var(--grey);
+      text-decoration: none;
+
+      font-size: 10px;
+      letter-spacing: 0.22em;
+
+      text-transform: uppercase;
+
+      transition: color 0.25s ease;
+    }
+
+    nav a:hover {
+      color: var(--green);
+    }
+
+    /* HERO */
+
+    .hero {
+      min-height: calc(100vh - 80px);
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      padding: 70px 0 90px;
+    }
+
+    .frog-container {
+      width: min(420px, 80vw);
+
+      position: relative;
+
+      margin-bottom: 48px;
+    }
+
+    .frog-container::after {
+      content: "";
+
+      position: absolute;
+
+      left: 20%;
+      right: 20%;
+      bottom: -20px;
+
+      height: 2px;
+
+      background: var(--green);
+
+      opacity: 0.15;
+
+      box-shadow:
+        0 0 20px var(--green),
+        0 0 60px var(--green);
+    }
+
+    .frog {
+      display: block;
+
+      width: 100%;
+      height: auto;
+
+      object-fit: contain;
+
+      filter:
+        grayscale(15%)
+        contrast(1.05);
+
+      transition:
+        filter 0.5s ease,
+        transform 0.5s ease;
+    }
+
+    .frog:hover {
+      filter:
+        grayscale(0%)
+        contrast(1.1);
+
+      transform: scale(1.01);
+    }
+
+    .catalogue {
+      color: var(--green);
+
+      font-family: monospace;
+
+      font-size: 10px;
+      letter-spacing: 0.18em;
+
+      margin-bottom: 20px;
+
+      opacity: 0.7;
+    }
+
+    h1 {
+      width: 94vw;
+
+      font-size: clamp(2.25rem, 9vw, 8rem);
+
+      font-weight: 500;
+
+      line-height: 0.9;
+
+      letter-spacing: -0.055em;
+
+      text-transform: uppercase;
+
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      margin-top: 23px;
+
+      font-size: clamp(0.75rem, 2vw, 1rem);
+
+      letter-spacing: 0.5em;
+
+      text-transform: uppercase;
+
+      color: var(--grey);
+    }
+
+    /* ABOUT */
+
+    .about {
+      border-top: 1px solid var(--dark-grey);
+
+      padding: 110px 0;
+    }
+
+    .section-number {
+      font-family: monospace;
+
+      color: var(--green);
+
+      font-size: 10px;
+
+      letter-spacing: 0.2em;
+
+      margin-bottom: 35px;
+    }
+
+    .about-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 2fr;
+
+      gap: 80px;
+    }
+
+    .section-title {
+      font-size: 13px;
+
+      letter-spacing: 0.3em;
+
+      text-transform: uppercase;
+
+      color: var(--grey);
+    }
+
+    .bio {
+      max-width: 680px;
+
+      font-size: clamp(1.25rem, 2.5vw, 2rem);
+
+      font-weight: 300;
+
+      line-height: 1.45;
+
+      letter-spacing: -0.02em;
+    }
+
+    /* LINKS */
+
+    .listen {
+      border-top: 1px solid var(--dark-grey);
+
+      padding: 90px 0;
+    }
+
+    .link {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      width: 100%;
+
+      padding: 25px 0;
+
+      border-bottom: 1px solid var(--dark-grey);
+
+      color: var(--white);
+
+      text-decoration: none;
+
+      text-transform: uppercase;
+
+      font-size: clamp(1.4rem, 4vw, 3rem);
+
+      font-weight: 400;
+
+      letter-spacing: -0.03em;
+
+      transition:
+        color 0.25s ease,
+        padding 0.25s ease;
+    }
+
+    .link span {
+      font-size: 16px;
+
+      color: var(--green);
+
+      opacity: 0;
+
+      transition: opacity 0.25s ease;
+    }
+
+    .link:hover {
+      color: var(--green);
+
+      padding-left: 12px;
+    }
+
+    .link:hover span {
+      opacity: 1;
+    }
+
+    /* FOOTER */
+
+    footer {
+      padding: 50px 0;
+
+      border-top: 1px solid var(--dark-grey);
+
+      display: flex;
+
+      justify-content: space-between;
+
+      color: #454542;
+
+      font-family: monospace;
+
+      font-size: 9px;
+
+      letter-spacing: 0.15em;
+
+      text-transform: uppercase;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+      header {
+        height: 65px;
+      }
+
+      nav {
+        gap: 15px;
+      }
+
+      .hero {
+        min-height: calc(100vh - 65px);
+      }
+
+      .frog-container {
+        width: min(310px, 78vw);
+        margin-bottom: 42px;
+      }
+
+      h1 {
+        width: 96vw;
+        font-size: clamp(2rem, 10vw, 4rem);
+        letter-spacing: -0.06em;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+      }
+
+      .about {
+        padding: 80px 0;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="site">
+
+    <header>
+
+      <div class="small-logo">
+        TFK / SYNTH
+      </div>
+
+      <nav>
+        <a href="#about">About</a>
+        <a href="#listen">Listen</a>
+      </nav>
+
+    </header>
+
+
+    <main>
+
+      <section class="hero">
+
+        <div class="frog-container">
+
+          <img
+            src="TFK.png"
+            alt="Hand-drawn frog wearing a cardboard crown"
+            class="frog"
+          >
+
+        </div>
+
+
+        <div class="catalogue">
+          SYNTHETIC AMPHIBIAN UNIT // 001
+        </div>
+
+
+        <h1>
+          The Frog King
+        </h1>
+
+
+        <div class="subtitle">
+          Synth Ensemble
+        </div>
+
+      </section>
+
+
+
+      <section class="about" id="about">
+
+        <div class="section-number">
+          [ 01 ]
+        </div>
+
+        <div class="about-grid">
+
+          <div class="section-title">
+            Bio
+          </div>
+
+          <div class="bio">
+
+            The Frog King is a synth ensemble exploring
+            hypnotic sequences, evolving textures and
+            cinematic electronic sound.
+
+            <br><br>
+
+            Modular synthesis, repetition and melodic
+            movement converge in a constantly shifting
+            electronic landscape.
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <section class="listen" id="listen">
+
+        <div class="section-number">
+          [ 02 ] — Links of interest
+        </div>
+
+
+        <a
+          href="https://open.spotify.com/artist/7L1fKlCJPjjbTafd9bKIBX"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link"
+        >
+
+          Spotify
+
+          <span>↗</span>
+
+        </a>
+
+
+        <a
+          href="https://www.instagram.com/lifescape.clicks/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link"
+        >
+
+          Instagram
+
+          <span>↗</span>
+
+        </a>
+
+      </section>
+
+    </main>
+
+
+
+    <footer>
+
+      <div>
+        © The Frog King
+      </div>
+
+      <div>
+        Synth Ensemble
+      </div>
+
+    </footer>
+
+  </div>
+
+</body>
+</html>
